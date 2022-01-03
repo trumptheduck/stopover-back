@@ -19,7 +19,7 @@ function subtractArray(arr1, arr2) {
 
 exports.getPosts = async (req, res) => {
     try {
-      const posts = await Post.find({isPublished: true});
+      const posts = await Post.find({isPublished: true}).select("-content");
       return res.status(200).json(posts);
     } catch (err) {
       console.log(err);
@@ -27,24 +27,43 @@ exports.getPosts = async (req, res) => {
     }
   };
 
-  exports.getMyPosts = async (req, res) => {
-    try {
-      const posts = await Post.find({author: res.locals.user._id});
-      return res.status(200).json(posts);
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json(err);
-    }
-  };
+exports.getMyPosts = async (req, res) => {
+  try {
+    const posts = await Post.find({author: res.locals.user._id});
+    return res.status(200).json(posts);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
 exports.getPostById = async (req, res) => {
     try {
         const id = req.params.id;
         const post = await Post.findById(id);
-        return res.status(200).json(post);
+        if (post.isPublished) {
+          return res.status(200).json(post);
+        } else {
+          return res.status(403).json("Access Denied!");
+        }
     } catch (err) {
         console.log(err);
         return res.status(500).json(err);
     }
+};
+
+exports.getMyPostById = async (req, res) => {
+  try {
+      const id = req.params.id;
+      const post = await Post.findById(id);
+      if (!(String(post.author) === String(res.locals.user._id))) {
+        return res.status(403).json("Access Denied!");
+      }
+      return res.status(200).json(post);
+  } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+  }
 };
 
 exports.createPost = async (req, res) => {

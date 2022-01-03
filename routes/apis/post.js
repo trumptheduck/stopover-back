@@ -7,6 +7,8 @@ router.get('/posts', itemController.getPosts);
 
 router.get('/myposts', verifyMiddleware.verifyUser, verifyMiddleware.verifyWriter, itemController.getMyPosts);
 
+router.get('/mypost/:id', verifyMiddleware.verifyUser, verifyMiddleware.verifyWriter, itemController.getMyPostById);
+
 //GET BY ID
 
 router.get("/post/:id", itemController.getPostById);

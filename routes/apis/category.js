@@ -3,15 +3,13 @@ const categoryController = require("../../controllers/category.js");
 const verifyMiddleware = require('../../middlewares/verify.js')
 // GET ALL CAT
 
-// router.get('/categories', categoryController.getAllCategory);
+router.get('/categories', categoryController.getAllCategory);
 
-// // CREATE CAT
 
-// router.post("/category", verifyMiddleware,categoryController.createCategory);
+router.post("/category", verifyMiddleware.verifyUser, verifyMiddleware.verifyWriter,categoryController.createCategory);
 
-// // REMOVE CAT
 
-// router.post("/category/remove", verifyMiddleware,categoryController.deleteCategory);
+router.post("/category/remove", verifyMiddleware.verifyUser, verifyMiddleware.verifyWriter,categoryController.deleteCategory);
 
 // //////////////////////////////////////////////////////////////
 
